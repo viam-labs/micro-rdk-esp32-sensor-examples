@@ -1,0 +1,13 @@
+[package]
+name = "micro-rdk-esp32-sensor-examples"
+version = "0.1.0"
+edition = "2021"
+authors = ["Andrew Morrow <andrew.morrow@viam.com>"]
+resolver = "2"
+
+[dependencies]
+anyhow = {version = "1", features = ["backtrace"]}
+micro-rdk = {git = "https://github.com/viamrobotics/micro-rdk.git", features = ["esp32"]}
+
+[package.metadata.com.viam]
+module = true
