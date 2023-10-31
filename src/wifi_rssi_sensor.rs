@@ -3,7 +3,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-use esp_idf_sys::{wifi_ap_record_t, esp_wifi_sta_get_ap_info, EspError, ESP_OK};
+use esp_idf_sys::{esp_wifi_sta_get_ap_info, wifi_ap_record_t, EspError, ESP_OK};
 
 use micro_rdk::common::{
     config::ConfigType,
@@ -16,16 +16,18 @@ use micro_rdk::common::{
 
 pub struct WifiRSSISensor;
 
-pub(crate) fn register_model(registry: &mut ComponentRegistry) -> anyhow::Result<(), RegistryError> {
+pub(crate) fn register_model(
+    registry: &mut ComponentRegistry,
+) -> anyhow::Result<(), RegistryError> {
     registry.register_sensor("wifi-rssi", &WifiRSSISensor::from_config)?;
-    log::info!("wifi-rssi sensor registration ok");
+    log::debug!("wifi-rssi sensor registration ok");
     Ok(())
 }
 
 impl WifiRSSISensor {
     pub fn from_config(_cfg: ConfigType, _deps: Vec<Dependency>) -> anyhow::Result<SensorType> {
-        log::info!("wifi-rssi sensor instantiated from config");
-        Ok(Arc::new(Mutex::new(Self{})))
+        log::debug!("wifi-rssi sensor instantiated from config");
+        Ok(Arc::new(Mutex::new(Self {})))
     }
 }
 
@@ -41,7 +43,7 @@ impl Sensor for WifiRSSISensor {
 
 impl SensorT<f64> for WifiRSSISensor {
     fn get_readings(&self) -> anyhow::Result<TypedReadingsResult<f64>> {
-        log::info!("wifi-rssi sensor - get readings called");
+        log::debug!("wifi-rssi sensor - get readings called");
         let mut ap_info = wifi_ap_record_t::default();
         unsafe {
             match esp_wifi_sta_get_ap_info(&mut ap_info as *mut esp_idf_sys::wifi_ap_record_t) {
@@ -51,14 +53,14 @@ impl SensorT<f64> for WifiRSSISensor {
         };
         let mut x = HashMap::new();
         x.insert("rssi".to_string(), ap_info.rssi as f64);
-        log::info!("wifi-rssi sensor - get readings OK");
+        log::debug!("wifi-rssi sensor - get readings OK");
         Ok(x)
     }
 }
 
 impl Status for WifiRSSISensor {
     fn get_status(&self) -> anyhow::Result<Option<micro_rdk::google::protobuf::Struct>> {
-        log::info!("wifi-rssi sensor - get status called");
+        log::debug!("wifi-rssi sensor - get status called");
         Ok(Some(micro_rdk::google::protobuf::Struct {
             fields: HashMap::new(),
         }))
