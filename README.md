@@ -39,7 +39,8 @@ index 79fbc5c..949b5ab 100644
 +micro-rdk-esp32-sensor-examples = { git = "https://github.com/viam-labs/micro-rdk-esp32-sensor-examples" }
 ```
 
-Rebuild the project and reflash the board.
+Rebuild the project per the above Micro-RDK Development Setup
+instructions and reflash the board.
 
 ### Instantiating the Sensors
 
@@ -72,10 +73,11 @@ To instantiate the free heap sensor, add the following:
     }
 ```
 
-Reboot the ESP32 board so that it can pull the new configuration from
-app.viam.com, and these sensors should now be available to query in
-your language of choice with the Viam SDK (you can find this code on
-the `Code Sample` page for your robot):
+Reboot the ESP32 board (by, say, pressing the physical "boot" button)
+so that it can pull the new configuration from app.viam.com, and these
+sensors should now be available to query in your language of choice
+with the Viam SDK (you can find this code on the `Code Sample` page
+for your robot):
 
 ``` python
     # wifi-sensor
