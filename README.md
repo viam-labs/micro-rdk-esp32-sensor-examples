@@ -81,12 +81,12 @@ for your robot):
 
 ``` python
     # wifi-sensor
-    wifi_sensor = Sensor.from_robot(robot, "wifi-sensor")
+    wifi_sensor = Sensor.from_robot(robot, "my-wifi-sensor")
     wifi_sensor_return_value = await wifi_sensor.get_readings()
     print(f"wifi-sensor get_readings return value: {wifi_sensor_return_value}")
 
     # free-heap-sensor
-    free_heap_sensor = Sensor.from_robot(robot, "free-heap-sensor")
+    free_heap_sensor = Sensor.from_robot(robot, "my-free-heap-sensor")
     free_heap_sensor_return_value = await free_heap_sensor.get_readings()
     print(f"free-heap-sensor get_readings return value: {free_heap_sensor_return_value}")
 ```
