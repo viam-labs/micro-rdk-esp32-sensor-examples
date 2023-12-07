@@ -10,7 +10,7 @@ use micro_rdk::common::{
     config::ConfigType,
     registry::{ComponentRegistry, Dependency, RegistryError},
     sensor::{
-        GenericReadingsResult, Sensor, SensorResult, SensorT, SensorType, TypedReadingsResult,
+        GenericReadingsResult, Readings, Sensor, SensorResult, SensorT, SensorType, TypedReadingsResult,
     },
     status::Status,
 };
@@ -33,7 +33,9 @@ impl WifiRSSISensor {
     }
 }
 
-impl Sensor for WifiRSSISensor {
+impl Sensor for WifiRSSISensor {}
+
+impl Readings for WifiRSSISensor {
     fn get_generic_readings(&self) -> anyhow::Result<GenericReadingsResult> {
         Ok(self
             .get_readings()?
