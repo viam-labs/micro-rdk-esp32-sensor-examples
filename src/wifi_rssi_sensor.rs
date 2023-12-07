@@ -5,6 +5,7 @@ use std::{
 
 use esp_idf_sys::{esp_wifi_sta_get_ap_info, wifi_ap_record_t, EspError, ESP_OK};
 
+use micro_rdk::DoCommand;
 use micro_rdk::common::{
     config::ConfigType,
     registry::{ComponentRegistry, Dependency, RegistryError},
@@ -14,6 +15,7 @@ use micro_rdk::common::{
     status::Status,
 };
 
+#[derive(DoCommand)]
 pub struct WifiRSSISensor;
 
 pub(crate) fn register_model(
