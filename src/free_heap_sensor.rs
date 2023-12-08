@@ -36,7 +36,7 @@ impl FreeHeapSensor {
 
 impl Sensor for FreeHeapSensor {}
 impl Readings for FreeHeapSensor {
-    fn get_generic_readings(&self) -> anyhow::Result<GenericReadingsResult> {
+    fn get_generic_readings(&mut self) -> anyhow::Result<GenericReadingsResult> {
         Ok(self
             .get_readings()?
             .into_iter()

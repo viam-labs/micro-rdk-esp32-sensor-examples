@@ -36,7 +36,7 @@ impl WifiRSSISensor {
 impl Sensor for WifiRSSISensor {}
 
 impl Readings for WifiRSSISensor {
-    fn get_generic_readings(&self) -> anyhow::Result<GenericReadingsResult> {
+    fn get_generic_readings(&mut self) -> anyhow::Result<GenericReadingsResult> {
         Ok(self
             .get_readings()?
             .into_iter()
