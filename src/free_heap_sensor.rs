@@ -5,17 +5,20 @@ use std::{
 
 use esp_idf_sys::esp_get_free_heap_size;
 
+use micro_rdk::DoCommand;
+
 use micro_rdk::common::{
     config::ConfigType,
     registry::{ComponentRegistry, Dependency, RegistryError},
     sensor::{
-        GenericReadingsResult, Sensor, SensorResult, SensorT, SensorType, TypedReadingsResult,
+        GenericReadingsResult, Readings, Sensor, SensorResult, SensorT, SensorType, TypedReadingsResult,
     },
     status::Status,
 };
 
 //use micro_rdk::google::protobuf;
 
+#[derive(DoCommand)]
 pub struct FreeHeapSensor;
 
 pub fn register_model(registry: &mut ComponentRegistry) -> anyhow::Result<(), RegistryError> {
@@ -31,8 +34,9 @@ impl FreeHeapSensor {
     }
 }
 
-impl Sensor for FreeHeapSensor {
-    fn get_generic_readings(&self) -> anyhow::Result<GenericReadingsResult> {
+impl Sensor for FreeHeapSensor {}
+impl Readings for FreeHeapSensor {
+    fn get_generic_readings(&mut self) -> anyhow::Result<GenericReadingsResult> {
         Ok(self
             .get_readings()?
             .into_iter()

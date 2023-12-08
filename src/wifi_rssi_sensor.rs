@@ -5,15 +5,17 @@ use std::{
 
 use esp_idf_sys::{esp_wifi_sta_get_ap_info, wifi_ap_record_t, EspError, ESP_OK};
 
+use micro_rdk::DoCommand;
 use micro_rdk::common::{
     config::ConfigType,
     registry::{ComponentRegistry, Dependency, RegistryError},
     sensor::{
-        GenericReadingsResult, Sensor, SensorResult, SensorT, SensorType, TypedReadingsResult,
+        GenericReadingsResult, Readings, Sensor, SensorResult, SensorT, SensorType, TypedReadingsResult,
     },
     status::Status,
 };
 
+#[derive(DoCommand)]
 pub struct WifiRSSISensor;
 
 pub(crate) fn register_model(
@@ -31,8 +33,10 @@ impl WifiRSSISensor {
     }
 }
 
-impl Sensor for WifiRSSISensor {
-    fn get_generic_readings(&self) -> anyhow::Result<GenericReadingsResult> {
+impl Sensor for WifiRSSISensor {}
+
+impl Readings for WifiRSSISensor {
+    fn get_generic_readings(&mut self) -> anyhow::Result<GenericReadingsResult> {
         Ok(self
             .get_readings()?
             .into_iter()
