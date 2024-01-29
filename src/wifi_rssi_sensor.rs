@@ -3,16 +3,18 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-use esp_idf_sys::{esp_wifi_sta_get_ap_info, wifi_ap_record_t, EspError, ESP_OK};
-
-use micro_rdk::DoCommand;
-use micro_rdk::common::{
-    config::ConfigType,
-    registry::{ComponentRegistry, Dependency, RegistryError},
-    sensor::{
-        GenericReadingsResult, Readings, Sensor, SensorResult, SensorT, SensorType, TypedReadingsResult,
+use micro_rdk::{
+    common::{
+        config::ConfigType,
+        registry::{ComponentRegistry, Dependency, RegistryError},
+        sensor::{
+            GenericReadingsResult, Readings, Sensor, SensorResult, SensorT, SensorType,
+            TypedReadingsResult,
+        },
+        status::Status,
     },
-    status::Status,
+    esp32::esp_idf_svc::sys::{esp_wifi_sta_get_ap_info, wifi_ap_record_t, EspError, ESP_OK},
+    DoCommand,
 };
 
 #[derive(DoCommand)]
@@ -50,7 +52,7 @@ impl SensorT<f64> for WifiRSSISensor {
         log::debug!("wifi-rssi sensor - get readings called");
         let mut ap_info = wifi_ap_record_t::default();
         unsafe {
-            match esp_wifi_sta_get_ap_info(&mut ap_info as *mut esp_idf_sys::wifi_ap_record_t) {
+            match esp_wifi_sta_get_ap_info(&mut ap_info as *mut wifi_ap_record_t) {
                 ESP_OK => {}
                 err => return Err(EspError::from(err).unwrap().into()),
             }
