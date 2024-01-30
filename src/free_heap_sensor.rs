@@ -3,20 +3,19 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-use esp_idf_sys::esp_get_free_heap_size;
-
-use micro_rdk::DoCommand;
-
-use micro_rdk::common::{
-    config::ConfigType,
-    registry::{ComponentRegistry, Dependency, RegistryError},
-    sensor::{
-        GenericReadingsResult, Readings, Sensor, SensorResult, SensorT, SensorType, TypedReadingsResult,
+use micro_rdk::{
+    common::{
+        config::ConfigType,
+        registry::{ComponentRegistry, Dependency, RegistryError},
+        sensor::{
+            GenericReadingsResult, Readings, Sensor, SensorResult, SensorT, SensorType,
+            TypedReadingsResult,
+        },
+        status::Status,
     },
-    status::Status,
+    esp32::esp_idf_svc::sys::esp_get_free_heap_size,
+    DoCommand,
 };
-
-//use micro_rdk::google::protobuf;
 
 #[derive(DoCommand)]
 pub struct FreeHeapSensor;
