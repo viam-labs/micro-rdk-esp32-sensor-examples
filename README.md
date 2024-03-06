@@ -8,7 +8,7 @@
 
 This project in this repository was generated from the [Micro-RDK
 Module
-Template](https://github.com/viamrobotics/micro-rdk-module-template),
+Template](https://github.com/viamrobotics/micro-rdk/tree/main/templates/module),
 and demonstrates how to produce modular resources for the Micro-RDK.
 
 ## Usage
@@ -94,12 +94,12 @@ can find this code on the `Code Sample` page for your robot):
 ## Implementation Walkthrough
 
 This project was created by using the [Micro-RDK Module
-Template](https://github.com/viamrobotics/micro-rdk-module-template)
+Template](https://github.com/viamrobotics/micro-rdk/tree/main/templates/module)
 and `cargo generate`:
 
 ``` shell
 $ cargo install cargo-generate
-$ cargo generate --git https://github.com/viamrobotics/micro-rdk-module-template
+$ cargo generate --git https://github.com/viamrobotics/micro-rdk templates/module
 ```
 
 When prompted by the template, the project was named
