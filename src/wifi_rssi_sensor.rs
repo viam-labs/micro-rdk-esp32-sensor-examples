@@ -9,18 +9,18 @@ use micro_rdk::{
         registry::{ComponentRegistry, Dependency, RegistryError},
         sensor::{
             GenericReadingsResult, Readings, Sensor, SensorResult, SensorT, SensorType,
-            TypedReadingsResult,
+            TypedReadingsResult, SensorError
         },
-        status::Status,
+        status::{Status, StatusError},
     },
-    esp32::esp_idf_svc::sys::{esp_wifi_sta_get_ap_info, wifi_ap_record_t, EspError, ESP_OK},
+    esp32::esp_idf_svc::sys::{esp_wifi_sta_get_ap_info, wifi_ap_record_t, ESP_OK},
     DoCommand,
 };
 
 #[derive(DoCommand)]
 pub struct WifiRSSISensor;
 
-pub(crate) fn register_model(
+pub(crate) fn register_models(
     registry: &mut ComponentRegistry,
 ) -> anyhow::Result<(), RegistryError> {
     registry.register_sensor("wifi-rssi", &WifiRSSISensor::from_config)?;
@@ -29,7 +29,7 @@ pub(crate) fn register_model(
 }
 
 impl WifiRSSISensor {
-    pub fn from_config(_cfg: ConfigType, _deps: Vec<Dependency>) -> anyhow::Result<SensorType> {
+    pub fn from_config(_cfg: ConfigType, _deps: Vec<Dependency>) -> Result<SensorType, SensorError> {
         log::debug!("wifi-rssi sensor instantiated from config");
         Ok(Arc::new(Mutex::new(Self {})))
     }
@@ -38,7 +38,7 @@ impl WifiRSSISensor {
 impl Sensor for WifiRSSISensor {}
 
 impl Readings for WifiRSSISensor {
-    fn get_generic_readings(&mut self) -> anyhow::Result<GenericReadingsResult> {
+    fn get_generic_readings(&mut self) -> Result<GenericReadingsResult, SensorError> {
         Ok(self
             .get_readings()?
             .into_iter()
@@ -48,13 +48,13 @@ impl Readings for WifiRSSISensor {
 }
 
 impl SensorT<f64> for WifiRSSISensor {
-    fn get_readings(&self) -> anyhow::Result<TypedReadingsResult<f64>> {
+    fn get_readings(&self) -> Result<TypedReadingsResult<f64>, SensorError> {
         log::debug!("wifi-rssi sensor - get readings called");
         let mut ap_info = wifi_ap_record_t::default();
         unsafe {
             match esp_wifi_sta_get_ap_info(&mut ap_info as *mut wifi_ap_record_t) {
                 ESP_OK => {}
-                err => return Err(EspError::from(err).unwrap().into()),
+                err => return Err(SensorError::SensorCodeError(err)), //TODO: impl #from EspError variant
             }
         };
         let mut x = HashMap::new();
@@ -65,7 +65,7 @@ impl SensorT<f64> for WifiRSSISensor {
 }
 
 impl Status for WifiRSSISensor {
-    fn get_status(&self) -> anyhow::Result<Option<micro_rdk::google::protobuf::Struct>> {
+    fn get_status(&self) -> Result<Option<micro_rdk::google::protobuf::Struct>, StatusError> {
         log::debug!("wifi-rssi sensor - get status called");
         Ok(Some(micro_rdk::google::protobuf::Struct {
             fields: HashMap::new(),

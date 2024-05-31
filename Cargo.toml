@@ -11,7 +11,7 @@ esp-idf-sys = {git = "https://github.com/viamrobotics/esp-idf-sys.git"}
 [dependencies]
 anyhow = {version = "1", features = ["backtrace"]}
 log = "0.4"
-micro-rdk = {git = "https://github.com/viamrobotics/micro-rdk.git", features = ["esp32"]}
+micro-rdk = {git = "https://github.com/viamrobotics/micro-rdk.git", features = ["esp32"], version = "0.1.9-rc2", rev = "3aae9aa"}
 
 [package.metadata.com.viam]
 module = true
