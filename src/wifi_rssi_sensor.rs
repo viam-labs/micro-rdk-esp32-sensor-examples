@@ -22,7 +22,7 @@ pub struct WifiRSSISensor;
 
 pub(crate) fn register_models(
     registry: &mut ComponentRegistry,
-) -> anyhow::Result<(), RegistryError> {
+) -> Result<(), RegistryError> {
     registry.register_sensor("wifi-rssi", &WifiRSSISensor::from_config)?;
     log::debug!("wifi-rssi sensor registration ok");
     Ok(())
