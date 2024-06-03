@@ -9,9 +9,9 @@ use micro_rdk::{
         registry::{ComponentRegistry, Dependency, RegistryError},
         sensor::{
             GenericReadingsResult, Readings, Sensor, SensorResult, SensorT, SensorType,
-            TypedReadingsResult,
+            TypedReadingsResult, SensorError
         },
-        status::Status,
+        status::{Status, StatusError},
     },
     esp32::esp_idf_svc::sys::esp_get_free_heap_size,
     DoCommand,
@@ -20,14 +20,14 @@ use micro_rdk::{
 #[derive(DoCommand)]
 pub struct FreeHeapSensor;
 
-pub fn register_model(registry: &mut ComponentRegistry) -> anyhow::Result<(), RegistryError> {
+pub fn register_models(registry: &mut ComponentRegistry) -> Result<(), RegistryError> {
     registry.register_sensor("free-heap", &FreeHeapSensor::from_config)?;
     log::debug!("free-heap sensor registration ok");
     Ok(())
 }
 
 impl FreeHeapSensor {
-    pub fn from_config(_cfg: ConfigType, _deps: Vec<Dependency>) -> anyhow::Result<SensorType> {
+    pub fn from_config(_cfg: ConfigType, _deps: Vec<Dependency>) -> Result<SensorType, SensorError> {
         log::debug!("free-heap sensor instantiated from config");
         Ok(Arc::new(Mutex::new(Self {})))
     }
@@ -35,7 +35,7 @@ impl FreeHeapSensor {
 
 impl Sensor for FreeHeapSensor {}
 impl Readings for FreeHeapSensor {
-    fn get_generic_readings(&mut self) -> anyhow::Result<GenericReadingsResult> {
+    fn get_generic_readings(&mut self) -> Result<GenericReadingsResult, SensorError> {
         Ok(self
             .get_readings()?
             .into_iter()
@@ -45,7 +45,7 @@ impl Readings for FreeHeapSensor {
 }
 
 impl SensorT<f64> for FreeHeapSensor {
-    fn get_readings(&self) -> anyhow::Result<TypedReadingsResult<f64>> {
+    fn get_readings(&self) -> Result<TypedReadingsResult<f64>, SensorError> {
         log::debug!("free-heap sensor - get readings called");
         let reading = unsafe { esp_get_free_heap_size() };
         let mut x = HashMap::new();
@@ -56,7 +56,7 @@ impl SensorT<f64> for FreeHeapSensor {
 }
 
 impl Status for FreeHeapSensor {
-    fn get_status(&self) -> anyhow::Result<Option<micro_rdk::google::protobuf::Struct>> {
+    fn get_status(&self) -> Result<Option<micro_rdk::google::protobuf::Struct>, StatusError>  {
         log::debug!("free-heap sensor - get status called");
         Ok(Some(micro_rdk::google::protobuf::Struct {
             fields: HashMap::new(),
