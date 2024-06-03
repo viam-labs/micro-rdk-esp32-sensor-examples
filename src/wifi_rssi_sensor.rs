@@ -54,6 +54,7 @@ impl SensorT<f64> for WifiRSSISensor {
         unsafe {
             match esp_wifi_sta_get_ap_info(&mut ap_info as *mut wifi_ap_record_t) {
                 ESP_OK => {}
+                // TODO(RSDK-7801): Support #from EspError for SensorError
                 err => return Err(SensorError::SensorCodeError(err)), //TODO: impl #from EspError variant
             }
         };
