@@ -13,7 +13,7 @@ use micro_rdk::{
         },
         status::{Status, StatusError},
     },
-    esp32::esp_idf_svc::sys::{esp_wifi_sta_get_ap_info, wifi_ap_record_t, ESP_OK, EspError},
+    esp32::esp_idf_svc::sys::{esp_wifi_sta_get_ap_info, wifi_ap_record_t, EspError},
     DoCommand,
 };
 
@@ -52,10 +52,10 @@ impl SensorT<f64> for WifiRSSISensor {
         log::debug!("wifi-rssi sensor - get readings called");
         let mut ap_info = wifi_ap_record_t::default();
         unsafe {
-            let res = esp_wifi_sta_get_ap_info(&mut ap_info as *mut wifi_ap_record_t);
-            match res {
-                ESP_OK => {}
-                _err => return Err(SensorError::EspError(EspError::from(res).expect("Failed to create EspError"))), 
+            match EspError::convert(esp_wifi_sta_get_ap_info(&mut ap_info as *mut wifi_ap_record_t)) {
+                Ok(_v) => {}
+                Err(e) => return Err(SensorError::EspError(e)),
+                
             }
         };
         let mut x = HashMap::new();
